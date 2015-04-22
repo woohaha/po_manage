@@ -1,0 +1,39 @@
+{
+  "db": {
+    "filename": "db.json",
+    "column": [
+      {
+      "id": "索引键",
+      "handout_date": "提交财务日期",
+      "vendor": "供应商",
+      "pay_content": "支付内容",
+      "price": "金额",
+      "pay_condition": "支付条件",
+      "expired": "到期日",
+      "pr_num": "pr号",
+      "po_num": "po号",
+      "inv_num": "inv号",
+      "pea": "pea号",
+      "handler": "采购经手人",
+      "account_signer": "财务签收人",
+      "notes": "备注"
+    }
+    ]
+  },
+  "pur_operator": {
+    "filename": "operator.json",
+    "column": ["采购人员列表"]
+  },
+  "account": {
+    "filename": "account.json",
+    "column": ["会计列表"]
+  },
+  "pay_condition": {
+    "filename": "pay_condition.json",
+    "column": ["支付条件列表"]
+  },
+  "vendor": {
+    "filename": "vendor.json",
+    "column": ["供应商列表"]
+  }
+}

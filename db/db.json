@@ -1,0 +1,19 @@
+[
+  {
+    "id":1,
+    "handout_date":"2015-03-02",
+    "vendor":"美心",
+    "pay_content":"一个月饼",
+    "price":"30.00",
+    "pay_condition": "支付条件",
+    "expired": "2015-03-09",
+    "pr_num": "QC1029387449",
+    "po_num": ["CD65d4f1864156"],
+    "inv_num": "65716546",
+    "pea": "14-2015",
+    "handler": "经手人",
+    "account_signer": "签收人",
+    "notes": "备注",
+    "pay_date":"2017-03-04"
+  }
+]
