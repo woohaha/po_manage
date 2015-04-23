@@ -29,10 +29,9 @@ app.get('/', function (req, res) {
 
 io.on('connection', function (socket) {
     socket.on('db_require', function () {
-        for (var index=0; index < db.length; index++) {
+        for (var index = 0; index < db.length; index++) {
             socket.emit('item_response', db[index]);
         }
-        //socket.emit('db_response',db)
     });
     socket.on('operator_require', function () {
         socket.emit('operator_response', pur_operator)
@@ -45,12 +44,43 @@ io.on('connection', function (socket) {
         io.emit('item_response', item);
     });
     socket.on('mod_item', function (item) {
-        for(var i=0;i<db.length;i++){
-            if(db[i].id==item.id){
-                db[i]=item;
-                io.emit('item_moded',item);
+        for (var i = 0; i < db.length; i++) {
+            if (db[i].id == item.id) {
+                db[i] = item;
+                io.emit('item_moded', item);
             }
         }
+    });
+    socket.on('user-selected', function (user) {
+        for (var index = 0; index < pur_operator.length; index++) {
+            if (pur_operator[index].name == user){
+                pur_operator[index].logined = true;
+                pur_operator[index].session = socket.id
+            }
+        }
+        io.emit('operator_response',pur_operator);
+        socket.broadcast.emit('del-user', user);
+    });
+    socket.on('disconnect', function () {
+        for (var index = 0; index < pur_operator.length; index++) {
+            if (pur_operator[index].session == socket.id){
+                pur_operator[index].logined = false;
+                pur_operator[index].session = ''
+            }
+        }
+        io.emit('operator_response',pur_operator);
+    });
+    socket.on('sendall', function (msg) {
+        socket.broadcast.emit('recieve_msg',msg);
+    });
+    socket.on('sendmsg', function (msg) {
+        var reciever;
+        for (var index = 0; index < pur_operator.length; index++) {
+            if (pur_operator[index].name == msg.sendto){
+                reciever=pur_operator[index].session;
+            }
+        }
+        socket.to(reciever).emit('recieve_msg',msg);
     })
 });
 

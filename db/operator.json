@@ -1,4 +1,12 @@
 [
-  "潘洋",
-  "张伟强"
+  {
+    "name": "潘洋",
+    "logined": false,
+    "session": ""
+  },
+  {
+    "name": "张伟强",
+    "logined": false,
+    "session": ""
+  }
 ]

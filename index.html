@@ -6,6 +6,7 @@
     <script src="static/js/jquery.js"></script>
     <script src="static/js/bootstrap.js"></script>
     <script src="static/js/moment.js"></script>
+    <script src="static/js/notify-combined.js"></script>
     <link href="static/css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="static/css/bootstrap-theme.css" rel="stylesheet" type="text/css">
     <link href="static/css/normalize.css" rel="stylesheet" type="text/css">
@@ -16,6 +17,7 @@
     <script src="js/bootstrap.js"></script>
     <script src="js/moment.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="js/notify-combined.js"></script>
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="css/bootstrap-theme.css" rel="stylesheet" type="text/css">
     <link href="css/normalize.css" rel="stylesheet" type="text/css">
@@ -44,6 +46,11 @@
                         <li class="divider"></li>
                         <li><a href="#">成员管理</a></li>
                     </ul>
+                </li>
+                <li>
+                    <a id="notification-icon" href="javascript:" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-envelope"></span></a>
+                    <ul class="dropdown-menu operator-list" role="menu" id="msg-box">
+                        </ul>
                 </li>
             </ul>
         </div>
@@ -216,9 +223,9 @@
                 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
                         aria-expanded="false">发送给 <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu operator-list" role="menu">
+                <ul class="dropdown-menu operator-list" role="menu" id="sendto_list">
                     <li class="divider"></li>
-                    <li><a href="#" id="sendall">全部人</a></li>
+                    <li class="oper"><a href="#" id="sendall">全部人</a></li>
                 </ul>
                 <button type="button" class="btn btn-default" data-dismiss="modal">知道了</button></div>
                 <button type="button" class="btn btn-warning" data-dismiss="modal" id="modify-item">修改</button>
@@ -235,6 +242,8 @@
     var socket = io();
     var new_items = {};
     var mod_item = {};
+    var handler='';
+    var pur_operator='';
     var div_alert = $("div.alert");
     var fields = ['id', 'handout_date', 'vendor', 'pay_content', 'price', 'pay_condition', 'expired', 'pr_num', 'po_num', 'inv_num', 'pea', 'pay_date', 'handler', 'account_signer', 'notes'];
     $(document).ready(function () {
@@ -246,7 +255,14 @@
         });
         $("ul#topright").on('click', 'li.oper', function () {
             $('a#operator').text($(this).text());
-            new_items['handler'] = $(this).text()
+            handler=new_items['handler'] = $(this).text();
+            $.each($('ul#sendto_list').children(), function (i, oper) {
+                if(oper.innerText==handler) oper.remove()
+            });
+            $.each($('ul#topright').children().slice(0,-1), function (i, oper) {
+                oper.remove()
+            });
+            socket.emit('user-selected',handler);
         });
         $("input#handout_date").change(function () {
             new_items['handout_date'] = $(this).val()
@@ -324,7 +340,7 @@
             var button = $(this);
             var recipient = button.attr('data-itemid');
             var modal = $('#more-func');
-            modal.find('#creation-date').text(moment.unix(recipient.slice(-4)).format('YYYY-MM-DD'));
+            modal.find('#creation-date').text(moment.unix(recipient.slice(0,-4)).format('YYYY-MM-DD'));
             modal.find('p#record-id').text(recipient);
             modal.modal('show');
         });
@@ -369,6 +385,33 @@
                 new_items={};
                 switch_mod_or_add(true);
             }
+        });
+        $('ul#sendto_list').on('click','li.oper', function () {
+            var msg={
+                "sender":handler,
+                "item_id":$('p#record-id').text(),
+                "sendto":''
+            };
+            if(msg.sender==''){
+                $.notify("未选择操作人","error");
+            }else{
+                if($(this).children('a').attr('id')=='sendall'){
+                    socket.emit('sendall',msg);
+                }else{
+                    msg.sendto=$(this).children('a').text();
+                    socket.emit('sendmsg',msg);
+                }
+            }
+        });
+        $('ul#msg-box').on('click','li', function () {
+            var row=$('tr#'+$(this).data('id'));
+            $(this).remove();
+            $('a#notification-icon').children('span').removeClass('text-warning');
+            $(window).scrollTop();
+            row.attr('class','danger');
+            setTimeout(function () {
+                row.attr('class','');
+            },3000)
         })
     });
     function switch_mod_or_add(add){
@@ -381,6 +424,13 @@
             $('div#mod-item-btn').show();
         }
     }
+    socket.on('del-user', function (user) {
+        $.each($('ul#topright').children(), function (index,oper) {
+            if(oper.innerText==user){
+                oper.remove()
+            }
+        })
+    });
     socket.on('item_moded', function (item) {
         var row=$('tr#'+item.id);
         row.text("");
@@ -391,8 +441,15 @@
         div_alert.show();
     });
     socket.on('operator_response', function (opers) {
+        pur_operator=opers;
+        $("ul.operator-list").children('li.divider').prevAll().remove();
         $.each(opers, function (index, oper) {
-            $("ul.operator-list").children('li.divider').before('<li class="oper"><a href="javascript:">' + oper + '</a></li>');
+            if(!oper.logined){
+                $("ul#topright").children('li.divider').before('<li class="oper"><a href="javascript:">' + oper.name + '</a></li>');
+                $("ul#sendto_list").children('li.divider').before('<li class="oper disabled"><a href="javascript:">' + oper.name + '</a></li>');
+            }else{
+                $("ul#sendto_list").children('li.divider').before('<li class="oper"><a href="javascript:">' + oper.name + '</a></li>');
+            }
         })
     });
     socket.on('item_response', function (item) {
@@ -401,26 +458,10 @@
                 item[fields[i]] = '';
         }
         $("tbody").append('<tr id="' + item.id + '">'+row_template(item)+'</tr>');
-//        console.log(item);
-//        console.log(row_template(item));
-//        $("tbody").append('<tr id="' + item.id + '">' +
-////        '<td>' + item.id + '</td>' +
-//        '<td>' + item.handout_date + '</td>' +
-//        '<td>' + item.vendor + '</td>' +
-//        '<td>' + item.pay_content + '</td>' +
-//        '<td>' + item.price + '</td>' +
-//        '<td>' + item.pay_condition + '</td>' +
-//        '<td>' + item.expired + '</td>' +
-//        '<td>' + item.pr_num + '</td>' +
-//        '<td>' + item.po_num + '</td>' +
-//        '<td>' + item.inv_num + '</td>' +
-//        '<td>' + item.pea + '</td>' +
-//        '<td>' + item.pay_date + '</td>' +
-//        '<td>' + item.handler + '</td>' +
-//        '<td>' + item.account_signer + '</td>' +
-//        '<td><a glyphicon-collapse-down" data-trigger="focus" data-toggle="popover" data-placement="left" data-content="' + item.notes + '">' + item.note_notify + '</a></td>' +
-//        '<td><span class="glyphicon glyphicon-menu-hamburger more-func-btn" data-itemid="' + item.id + '"></span></td>' +
-//        '</tr>')
+    });
+    socket.on('recieve_msg', function (msg) {
+        $('a#notification-icon').children('span').addClass('text-warning');
+        $('ul#msg-box').append('<li class="msg-item" data-id="'+msg.item_id+'"><a><strong>'+msg.sender+'</strong> 发给你一条记录</a></li>')
     });
     function row_template(item){
         if (item.notes != '') {
@@ -441,7 +482,7 @@
         '<td>' + item.pay_date + '</td>' +
         '<td>' + item.handler + '</td>' +
         '<td>' + item.account_signer + '</td>' +
-        '<td><a class="glyphicon-collapse-down" data-trigger="focus" data-toggle="popover" data-placement="left" data-content="' + item.notes + '">' + item.note_notify + '</a></td>' +
+        '<td><a data-trigger="focus" data-toggle="popover" data-placement="left" data-content="' + item.notes + '">' + item.note_notify + '</a></td>' +
         '<td><span class="glyphicon glyphicon-menu-hamburger more-func-btn" data-itemid="' + item.id + '"></span></td>' +
         '</tr>'
     }
