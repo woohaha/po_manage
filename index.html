@@ -82,13 +82,13 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-3">
-                            <label for="handout-date" class="input-group-addon">递交日</label>
+                            <label for="handout_date" class="input-group-addon">递交日</label>
                         </div>
                         <div class="col-xs-9">
-                            <input type="date" class="form-control" id="handout-date">
+                            <input type="date" class="form-control" id="handout_date">
                         </div>
                     </div>
-                    <input type="text" class="form-control" placeholder="签收人" id="account-signer">
+                    <input type="text" class="form-control" placeholder="签收人" id="account_signer">
                 </div>
             </div>
 
@@ -96,29 +96,29 @@
                 <div class="panel-heading">请款内容</div>
                 <div class="panel-body">
                     <input type="text" class="form-control" placeholder="供应商" id="vendor">
-                    <textarea class="form-control" rows="3" placeholder="支付内容" id="pay-content"></textarea>
+                    <textarea class="form-control" rows="3" placeholder="支付内容" id="pay_content"></textarea>
                 </div>
             </div>
             <div class="panel panel-danger">
                 <div class="panel-heading">付款信息</div>
                 <div class="panel-body">
                     <input type="number" class="form-control" placeholder="金额" id="price">
-                    <input type="text" class="form-control" placeholder="支付条件" id="pay-condition">
+                    <input type="text" class="form-control" placeholder="支付条件" id="pay_condition">
 
                     <div class="row">
                         <div class="col-xs-3">
-                            <label for="expired-date" class="input-group-addon">到期日</label>
+                            <label for="expired" class="input-group-addon">到期日</label>
                         </div>
                         <div class="col-xs-9">
-                            <input type="date" class="form-control" id="expired-date">
+                            <input type="date" class="form-control" id="expired">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-3">
-                            <label for="pay-date" class="input-group-addon">支付日</label>
+                            <label for="pay_date" class="input-group-addon">支付日</label>
                         </div>
                         <div class="col-xs-9">
-                            <input type="date" class="form-control" id="pay-date">
+                            <input type="date" class="form-control" id="pay_date">
                         </div>
                     </div>
                 </div>
@@ -126,10 +126,10 @@
             <div class="panel panel-warning">
                 <div class="panel-heading">相关单据</div>
                 <div class="panel-body">
-                    <input type="text" class="form-control" placeholder="请购单" id="qg">
+                    <input type="text" class="form-control" placeholder="请购单" id="pr_num">
                     <ul id="cd-list"></ul>
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="采购订单" id="cd">
+                        <input type="text" class="form-control" placeholder="采购订单" id="po_num">
                         <span class="input-group-btn">
                         <button class="btn btn-default" type="button" id="add-cd"><span
                                 class="glyphicon glyphicon-plus"></span>
@@ -138,7 +138,7 @@
                     </div>
                     <ul id="inv-list"></ul>
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Inv#" id="inv">
+                        <input type="text" class="form-control" placeholder="Inv#" id="inv_num">
                         <span class="input-group-btn">
                         <button class="btn btn-default" type="button" id="add-inv"><span
                                 class="glyphicon glyphicon-plus"></span>
@@ -151,15 +151,27 @@
             <div class="well well-sm">
                 <textarea class="form-control" rows="3" placeholder="备注" id="notes"></textarea>
             </div>
-            <div class="btn-group btn-group-justified" role="group">
+            <div class="btn-group btn-group-justified" role="group" id="add-item-btn">
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-danger" id="del-item"><span
-                            class="glyphicon glyphicon-minus-sign"></span> 删除
+                    <button type="button" class="btn btn-danger" id="reset-new-item"><span
+                            class="glyphicon glyphicon-minus-sign"></span> 重填
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-success" id="add-item"><span
+                    <button type="button" class="btn btn-success" id="add-new-item"><span
                             class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                </div>
+            </div>
+            <div class="btn-group btn-group-justified" role="group" id="mod-item-btn">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default" id="cancel-mod-item"><span
+                            class="glyphicon glyphicon-minus-sign"></span> 取消
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-warning" id="confirm-mod-item"><span
+                            class="glyphicon glyphicon-plus-sign"></span> 修改
                     </button>
                 </div>
             </div>
@@ -200,14 +212,17 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">发送给 <span class="caret"></span>
+                <div class="pull-left">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
+                        aria-expanded="false">发送给 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu operator-list" role="menu">
                     <li class="divider"></li>
                     <li><a href="#" id="sendall">全部人</a></li>
                 </ul>
-                <button type="button" class="btn btn-warning" data-dismiss="modal">修改</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">知道了</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">知道了</button></div>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="modify-item">修改</button>
+                <button type="button" class="btn btn-danger" id="del-item">删除</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -219,10 +234,13 @@
 <script>
     var socket = io();
     var new_items = {};
+    var mod_item = {};
     var div_alert = $("div.alert");
+    var fields = ['id', 'handout_date', 'vendor', 'pay_content', 'price', 'pay_condition', 'expired', 'pr_num', 'po_num', 'inv_num', 'pea', 'pay_date', 'handler', 'account_signer', 'notes'];
     $(document).ready(function () {
         socket.emit('db_require');
         socket.emit('operator_require');
+        switch_mod_or_add(true);
         $("div#side-nav").hover(function () {
             socket.emit('inputing', new_items['pur_operator'] || "有人")
         });
@@ -230,16 +248,16 @@
             $('a#operator').text($(this).text());
             new_items['handler'] = $(this).text()
         });
-        $("input#handout-date").change(function () {
+        $("input#handout_date").change(function () {
             new_items['handout_date'] = $(this).val()
         });
-        $("input#account-signer").change(function () {
+        $("input#account_signer").change(function () {
             new_items['account_signer'] = $(this).val()
         });
         $("input#vendor").change(function () {
             new_items['vendor'] = $(this).val()
         });
-        $("textarea#pay-content").change(function () {
+        $("textarea#pay_content").change(function () {
             new_items['pay_content'] = $(this).val()
         });
         $("textarea#notes").change(function () {
@@ -248,16 +266,16 @@
         $("input#price").change(function () {
             new_items['price'] = $(this).val()
         });
-        $("input#pay-condition").change(function () {
+        $("input#pay_condition").change(function () {
             new_items['pay_condition'] = $(this).val()
         });
-        $("input#expired-date").change(function () {
+        $("input#expired").change(function () {
             new_items['expired'] = $(this).val()
         });
-        $("input#pay-date").change(function () {
+        $("input#pay_date").change(function () {
             new_items['pay_date'] = $(this).val()
         });
-        $("input#qg").change(function () {
+        $("input#pr_num").change(function () {
             new_items['pr_num'] = $(this).val()
         });
         $("input#pea").change(function () {
@@ -266,19 +284,19 @@
         $('button#add-cd').click(function () {
             if (!$.isArray(new_items['po_num']))
                 new_items['po_num'] = [];
-            if ($("input#cd").val() != '') {
-                new_items['po_num'].push($("input#cd").val());
-                $("ul#cd-list").append('<li class="cd-item">' + $("input#cd").val() + '</li>');
-                $("input#cd").val('')
+            if ($("input#po_num").val() != '') {
+                new_items['po_num'].push($("input#po_num").val());
+                $("ul#cd-list").append('<li class="cd-item">' + $("input#po_num").val() + '</li>');
+                $("input#po_num").val('')
             }
         });
         $('button#add-inv').click(function () {
             if (!$.isArray(new_items['inv_num']))
                 new_items['inv_num'] = [];
-            if ($("input#inv").val() != '') {
-                new_items['inv_num'].push($("input#inv").val());
-                $("ul#inv-list").append('<li class="inv-item">' + $("input#inv").val() + '</li>');
-                $("input#inv").val('')
+            if ($("input#inv_num").val() != '') {
+                new_items['inv_num'].push($("input#inv_num").val());
+                $("ul#inv-list").append('<li class="inv-item">' + $("input#inv_num").val() + '</li>');
+                $("input#inv_num").val('')
             }
         });
 
@@ -302,14 +320,71 @@
         $("body").on('hide.bs.modal', function () {
             $('div.modal-backdrop').remove()
         });
-        $('tbody').on('click','span.more-func-btn', function () {
-            var button=$(this);
+        $('tbody').on('click', 'span.more-func-btn', function () {
+            var button = $(this);
             var recipient = button.attr('data-itemid');
-            var modal=$('#more-func');
-            modal.find('#creation-date').text(moment.unix(recipient.toString()).format('YYYY-MM-DD'));
+            var modal = $('#more-func');
+            modal.find('#creation-date').text(moment.unix(recipient.slice(-4)).format('YYYY-MM-DD'));
             modal.find('p#record-id').text(recipient);
             modal.modal('show');
+        });
+        $('button#modify-item').click(function () {
+            var row = $('tr#' + $('p#record-id').text());
+            mod_item['id'] = row.attr('id');
+            row.find('td').each(function (i, val) {
+                if (i < 13) {
+                    mod_item[fields[i + 1]] = val.innerText;
+                    $('#' + fields[i + 1]).val(val.innerText);
+                }
+                if (i == 13) {
+                    var item_notes = $(val).children('a').data('content');
+                    mod_item['notes'] = item_notes;
+                    $('#notes').val(item_notes);
+                }
+            });
+            switch_mod_or_add(false);
+        });
+        $('button#reset-new-item').click(function () {
+            for (var i=1;i<fields.length;i++){
+                $('#'+fields[i]).val("");
+            }
+            new_items={};
+        });
+        $('button#cancel-mod-item').click(function () {
+            switch_mod_or_add(true);
+            for (var i=1;i<fields.length;i++){
+                $('#'+fields[i]).val("");
+            }
+            mod_item={};
+        });
+        $('button#confirm-mod-item').click(function () {
+            if(!$.isEmptyObject(mod_item)){
+                $.each(new_items, function (key, val) {
+                   mod_item[key]=val;
+                });
+                socket.emit('mod_item',mod_item);
+                for (var i=1;i<fields.length;i++){
+                    $('#'+fields[i]).val("");
+                }
+                new_items={};
+                switch_mod_or_add(true);
+            }
         })
+    });
+    function switch_mod_or_add(add){
+        //true to show add-btns.false to show mod-btns
+        if(add){
+            $('div#add-item-btn').show();
+            $('div#mod-item-btn').hide();
+        }else{
+            $('div#add-item-btn').hide();
+            $('div#mod-item-btn').show();
+        }
+    }
+    socket.on('item_moded', function (item) {
+        var row=$('tr#'+item.id);
+        row.text("");
+        row.append(row_template(item));
     });
     socket.on('inputing_msg', function (msg) {
         div_alert.children('strong').text(msg);
@@ -321,19 +396,39 @@
         })
     });
     socket.on('item_response', function (item) {
-        var fields = ['id', 'handout_date', 'vendor', 'pay_content', 'price', 'pay_condition', 'expired', 'pr_num', 'po_num', 'inv_num', 'pea', 'pay_date', 'handler', 'account_signer', 'notes'];
         for (var i = 0; i < fields.length; i++) {
             if (!item.hasOwnProperty(fields[i]))
                 item[fields[i]] = '';
         }
+        $("tbody").append('<tr id="' + item.id + '">'+row_template(item)+'</tr>');
+//        console.log(item);
+//        console.log(row_template(item));
+//        $("tbody").append('<tr id="' + item.id + '">' +
+////        '<td>' + item.id + '</td>' +
+//        '<td>' + item.handout_date + '</td>' +
+//        '<td>' + item.vendor + '</td>' +
+//        '<td>' + item.pay_content + '</td>' +
+//        '<td>' + item.price + '</td>' +
+//        '<td>' + item.pay_condition + '</td>' +
+//        '<td>' + item.expired + '</td>' +
+//        '<td>' + item.pr_num + '</td>' +
+//        '<td>' + item.po_num + '</td>' +
+//        '<td>' + item.inv_num + '</td>' +
+//        '<td>' + item.pea + '</td>' +
+//        '<td>' + item.pay_date + '</td>' +
+//        '<td>' + item.handler + '</td>' +
+//        '<td>' + item.account_signer + '</td>' +
+//        '<td><a glyphicon-collapse-down" data-trigger="focus" data-toggle="popover" data-placement="left" data-content="' + item.notes + '">' + item.note_notify + '</a></td>' +
+//        '<td><span class="glyphicon glyphicon-menu-hamburger more-func-btn" data-itemid="' + item.id + '"></span></td>' +
+//        '</tr>')
+    });
+    function row_template(item){
         if (item.notes != '') {
             item.note_notify = '<span class="glyphicon glyphicon-collapse-down"></span>'
         } else {
             item.note_notify = ''
         }
-        $("tbody").append('<tr id="' + item.id + '">' +
-//        '<td>' + item.id + '</td>' +
-        '<td>' + item.handout_date + '</td>' +
+        return '<td>' + item.handout_date + '</td>' +
         '<td>' + item.vendor + '</td>' +
         '<td>' + item.pay_content + '</td>' +
         '<td>' + item.price + '</td>' +
@@ -346,14 +441,13 @@
         '<td>' + item.pay_date + '</td>' +
         '<td>' + item.handler + '</td>' +
         '<td>' + item.account_signer + '</td>' +
-        '<td><a glyphicon-collapse-down" data-trigger="focus" data-toggle="popover" data-placement="left" data-content="' + item.notes + '">' + item.note_notify + '</a></td>' +
-//        '<td><span class="glyphicon glyphicon-menu-hamburger more-func-btn" data-toggle="modal" data-target="#more-func" data-itemid="' + item.id + '"></span></td>' +
+        '<td><a class="glyphicon-collapse-down" data-trigger="focus" data-toggle="popover" data-placement="left" data-content="' + item.notes + '">' + item.note_notify + '</a></td>' +
         '<td><span class="glyphicon glyphicon-menu-hamburger more-func-btn" data-itemid="' + item.id + '"></span></td>' +
-        '</tr>')
-    });
-    $('#add-item').click(function () {
+        '</tr>'
+    }
+    $('#add-new-item').click(function () {
         if (!$.isEmptyObject(new_items)) {
-            new_items['id'] = moment().unix() + '.' + moment().get('millisecond');
+            new_items['id'] = moment().unix() + '_' + moment().get('millisecond');
             socket.emit('add_item', new_items);
             new_items = {}
         }

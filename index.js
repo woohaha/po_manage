@@ -43,6 +43,14 @@ io.on('connection', function (socket) {
     socket.on('add_item', function (item) {
         db.push(item);
         io.emit('item_response', item);
+    });
+    socket.on('mod_item', function (item) {
+        for(var i=0;i<db.length;i++){
+            if(db[i].id==item.id){
+                db[i]=item;
+                io.emit('item_moded',item);
+            }
+        }
     })
 });
 

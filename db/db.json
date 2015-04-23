@@ -1,19 +1,36 @@
 [
   {
-    "id":1,
+    "id": "1429756569_321",
     "handout_date":"2015-03-02",
     "vendor":"美心",
     "pay_content":"一个月饼",
     "price":"30.00",
-    "pay_condition": "支付条件",
+    "pay_condition": "3个月",
     "expired": "2015-03-09",
     "pr_num": "QC1029387449",
     "po_num": ["CD65d4f1864156"],
-    "inv_num": "65716546",
+    "inv_num": ["65716546","290387235"],
     "pea": "14-2015",
-    "handler": "经手人",
-    "account_signer": "签收人",
-    "notes": "备注",
+    "handler": "yuki",
+    "account_signer": "张五常",
+    "notes": "这是备注",
     "pay_date":"2017-03-04"
+  },
+  {
+    "id": "1429736569_123",
+    "handout_date":"2015-01-02",
+    "vendor":"美心2",
+    "pay_content":"三个月饼",
+    "price":"90.00",
+    "pay_condition": "预付",
+    "expired": "2015-03-09",
+    "pr_num": "QC1029387449",
+    "po_num": ["CD65d4f1864156","CD216542318651"],
+    "inv_num": ["65716546","sdofis"],
+    "pea": "15-2015",
+    "handler": "abc",
+    "account_signer": "李四",
+    "notes": "这是备注2",
+    "pay_date":"2117-02-03"
   }
 ]
